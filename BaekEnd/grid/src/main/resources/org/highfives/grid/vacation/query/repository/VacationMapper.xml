@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.highfives.grid.vacation.query.repository.VacationMapper">
+    <resultMap id="vacationInfoResultMap" type="org.highfives.grid.vacation.query.entity.VacationInfo">
+        <id property="id" column="ID"/>
+        <result property="vacationNum" column="VACATION_NUM"/>
+        <result property="addTime" column="ADD_TIME"/>
+        <result property="endTime" column="END_TIME"/>
+        <result property="employeeId" column="EMPLOYEE_ID"/>
+        <result property="typeId" column="TYPE_ID"/>
+    </resultMap>
+    <select id="selectAllVacationInfo" resultMap="vacationInfoResultMap" >
+        SELECT
+        ID,
+        VACATION_NUM,
+        ADD_TIME,
+        END_TIME,
+        EMPLOYEE_ID,
+        TYPE_ID
+        FROM VACATION_INFO
+    </select>
+</mapper>
