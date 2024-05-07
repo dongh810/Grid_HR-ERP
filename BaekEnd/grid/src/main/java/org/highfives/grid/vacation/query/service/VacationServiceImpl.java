@@ -29,4 +29,11 @@ public class VacationServiceImpl implements VacationService{
 
         return vacations.stream().map(vacation -> modelMapper.map(vacation, VacationInfoDTO.class)).collect(Collectors.toList());
     }
+
+    @Override
+    public List<VacationInfoDTO> getUserVacations(int employeeId) {
+        List<VacationInfo> vacations = vacationMapper.selectUserVacationInfo(employeeId);
+
+        return vacations.stream().map(vacation -> modelMapper.map(vacation, VacationInfoDTO.class)).collect(Collectors.toList());
+    }
 }

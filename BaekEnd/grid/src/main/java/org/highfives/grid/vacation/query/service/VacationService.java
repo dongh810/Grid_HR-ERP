@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface VacationService {
     List<VacationInfoDTO> getAllVacations();
+    List<VacationInfoDTO> getUserVacations(int employeeId);
 }

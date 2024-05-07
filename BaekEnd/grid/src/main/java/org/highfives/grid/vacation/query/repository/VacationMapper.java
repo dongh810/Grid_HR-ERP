@@ -10,4 +10,5 @@ public interface VacationMapper {
 
     List<VacationInfo> selectAllVacationInfo();
 
+    List<VacationInfo> selectUserVacationInfo(int employeeId);
 }

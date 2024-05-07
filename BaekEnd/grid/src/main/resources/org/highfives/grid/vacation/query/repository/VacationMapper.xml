@@ -21,4 +21,15 @@
         TYPE_ID
         FROM VACATION_INFO
     </select>
+    <select id="selectUserVacationInfo" parameterType="_int" resultMap="vacationInfoResultMap" >
+        SELECT
+        ID,
+        VACATION_NUM,
+        ADD_TIME,
+        END_TIME,
+        EMPLOYEE_ID,
+        TYPE_ID
+        FROM VACATION_INFO
+        WHERE EMPLOYEE_ID = #{employeeId}
+    </select>
 </mapper>
