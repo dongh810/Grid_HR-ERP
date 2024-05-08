@@ -1,6 +1,7 @@
 package org.highfives.grid.vacation.query.controller;
 
 import org.highfives.grid.vacation.query.dto.VacationInfoDTO;
+import org.highfives.grid.vacation.query.dto.VacationPolicyDTO;
 import org.highfives.grid.vacation.query.service.VacationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,5 +34,12 @@ public class VacationController {
         List<VacationInfoDTO> vacations = vacationService.getUserVacations(employeeId);
         return ResponseEntity.status(HttpStatus.OK).body(vacations);
     }
+
+    @GetMapping("/policy/{typeId}")
+    public ResponseEntity<List<VacationPolicyDTO>> getVacationPolicy(@PathVariable int typeId) {
+        List<VacationPolicyDTO> policies = vacationService.getVacationPolicy(typeId);
+        return ResponseEntity.status(HttpStatus.OK).body(policies);
+    }
+
 
 }

@@ -11,6 +11,11 @@
         <result property="employeeId" column="EMPLOYEE_ID"/>
         <result property="typeId" column="TYPE_ID"/>
     </resultMap>
+    <resultMap id="vacationPolicyResultMap" type="org.highfives.grid.vacation.query.entity.VacationPolicy">
+        <id property="id" column="ID"/>
+        <result property="content" column="CONTENT"/>
+        <result property="typeId" column="TYPE_ID"/>
+    </resultMap>
     <select id="selectAllVacationInfo" resultMap="vacationInfoResultMap" >
         SELECT
         ID,
@@ -31,5 +36,13 @@
         TYPE_ID
         FROM VACATION_INFO
         WHERE EMPLOYEE_ID = #{employeeId}
+    </select>
+    <select id="selectAllPolicy" parameterType="_int" resultMap="vacationPolicyResultMap">
+        SELECT
+        ID,
+        CONTENT,
+        TYPE_ID
+        FROM VACATION_POLICY
+        WHERE TYPE_ID = #{typeId}
     </select>
 </mapper>

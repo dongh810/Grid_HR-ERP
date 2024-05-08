@@ -2,7 +2,9 @@ package org.highfives.grid.vacation.query.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.highfives.grid.vacation.query.dto.VacationInfoDTO;
+import org.highfives.grid.vacation.query.dto.VacationPolicyDTO;
 import org.highfives.grid.vacation.query.entity.VacationInfo;
+import org.highfives.grid.vacation.query.entity.VacationPolicy;
 import org.highfives.grid.vacation.query.repository.VacationMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,5 +37,12 @@ public class VacationServiceImpl implements VacationService{
         List<VacationInfo> vacations = vacationMapper.selectUserVacationInfo(employeeId);
 
         return vacations.stream().map(vacation -> modelMapper.map(vacation, VacationInfoDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<VacationPolicyDTO> getVacationPolicy(int typeId) {
+        List<VacationPolicy> policies = vacationMapper.selectAllPolicy(typeId);
+
+        return policies.stream().map(policy -> modelMapper.map(policy, VacationPolicyDTO.class)).collect(Collectors.toList());
     }
 }
