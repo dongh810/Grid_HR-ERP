@@ -16,6 +16,14 @@
         <result property="content" column="CONTENT"/>
         <result property="typeId" column="TYPE_ID"/>
     </resultMap>
+    <resultMap id="vacationHistoryResultMap" type="org.highfives.grid.vacation.query.entity.VacationHistory">
+        <id property="id" column="ID"/>
+        <result property="changeTime" column="CHANGE_TIME"/>
+        <result property="changeReason" column="CHANGE_REASON"/>
+        <result property="typeId" column="TYPE_ID"/>
+        <result property="changeTypeId" column="CHANGE_TYPE_ID"/>
+        <result property="employeeId" column="EMPLOYEE_ID"/>
+    </resultMap>
     <select id="selectAllVacationInfo" resultMap="vacationInfoResultMap" >
         SELECT
         ID,
@@ -44,5 +52,15 @@
         TYPE_ID
         FROM VACATION_POLICY
         WHERE TYPE_ID = #{typeId}
+    </select>
+    <select id="selectAllHistories" resultMap="vacationHistoryResultMap">
+        SELECT
+        ID,
+        CHANGE_TIME,
+        CHANGE_REASON,
+        TYPE_ID,
+        CHANGE_TYPE_ID,
+        EMPLOYEE_ID
+        FROM VACATION_HISTORY
     </select>
 </mapper>
