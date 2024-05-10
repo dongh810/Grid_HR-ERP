@@ -1,0 +1,28 @@
+package org.highfives.grid.user.service;
+
+import lombok.extern.slf4j.Slf4j;
+import org.highfives.grid.user.entity.Employee;
+import org.highfives.grid.user.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@Slf4j
+public class UserServiceImpl implements UserService {
+
+    private UserRepository userRepository;
+
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public List<Employee> getAllUserinfo() {
+        return userRepository.findAll();
+    }
+
+
+}

@@ -34,4 +34,9 @@ public class VacationController {
     public void registVacationPolicy(@RequestBody RegistPolicy policyInfo) {
         vacationService.registVacationPolicy(policyInfo);
     }
+
+    @GetMapping("/test")
+    public void test() {
+        vacationService.giveAnnualVacation();
+    }
 }
