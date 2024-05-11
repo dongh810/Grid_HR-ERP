@@ -65,6 +65,7 @@ public class VacationServiceImpl implements VacationService {
         vacationPolicyRepository.save(vacationPolicy);
     }
 
+    // 각각의 직원이 몇개의 연차를 받아야 하는지 계산된것을 바탕으로 insert하는 메서드
     @Override
     @Transactional
 //    @Scheduled(cron = "0 0 0 1 1 ?")
@@ -91,6 +92,7 @@ public class VacationServiceImpl implements VacationService {
         }
     }
 
+    // HashMap을 활용하여 유저 id와 받아야 할 휴가의 개수를 저장하는 메서드
     private HashMap<Integer, Integer> getVacationInfo() {
         List<Integer> annuals = countDays();
         HashMap<Integer, Integer> userVacationInfo = new HashMap<>();
@@ -126,6 +128,7 @@ public class VacationServiceImpl implements VacationService {
         return annuals;
     }
 
+    // 몇년차 인지에 따라 연차 개수를 부여하는 메서드
     private int countVacation(int days) {
         int year = days / 365;
         int vacation = 0;
