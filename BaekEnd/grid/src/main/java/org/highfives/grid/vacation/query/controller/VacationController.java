@@ -7,10 +7,7 @@ import org.highfives.grid.vacation.query.service.VacationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,13 +28,13 @@ public class VacationController {
     }
 
     @GetMapping("/{employeeId}")
-    public ResponseEntity<List<VacationInfoDTO>> getUserVacations(@PathVariable int employeeId) {
+    public ResponseEntity<List<VacationInfoDTO>> getUserVacations(@PathVariable("employeeId") int employeeId) {
         List<VacationInfoDTO> vacations = vacationService.getUserVacations(employeeId);
         return ResponseEntity.status(HttpStatus.OK).body(vacations);
     }
 
     @GetMapping("/policy/{typeId}")
-    public ResponseEntity<List<VacationPolicyDTO>> getVacationPolicy(@PathVariable int typeId) {
+    public ResponseEntity<List<VacationPolicyDTO>> getVacationPolicy(@PathVariable("typeId") int typeId) {
         List<VacationPolicyDTO> policies = vacationService.getVacationPolicy(typeId);
         return ResponseEntity.status(HttpStatus.OK).body(policies);
     }
@@ -46,6 +43,18 @@ public class VacationController {
     public ResponseEntity<List<VacationHistoryDTO>> getAllVacationHistories() {
         List<VacationHistoryDTO> histories = vacationService.getAllVacationHistory();
         return ResponseEntity.status(HttpStatus.OK).body(histories);
+    }
+
+    @GetMapping("/name/search")
+    public ResponseEntity<List<VacationInfoDTO>> serachVacationInfoByName(@RequestParam("name") String name) {
+        List<VacationInfoDTO> vacations = vacationService.serachVacationInfoByName(name);
+        return ResponseEntity.status(HttpStatus.OK).body(vacations);
+    }
+
+    @GetMapping("/dept/search")
+    public ResponseEntity<List<VacationInfoDTO>> serachVacationInfoByDept(@RequestParam("dept") String dept) {
+        List<VacationInfoDTO> vacations = vacationService.serachVacationInfoByDept(dept);
+        return ResponseEntity.status(HttpStatus.OK).body(vacations);
     }
 
 

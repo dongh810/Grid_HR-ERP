@@ -17,4 +17,8 @@ public interface VacationMapper {
     List<VacationPolicy> selectAllPolicy(int typeId);
 
     List<VacationHistory> selectAllHistories();
+
+    List<VacationInfo> searchVacationInfoByName(String name);
+
+    List<VacationInfo> searchVacationInfoByDept(String dept);
 }
