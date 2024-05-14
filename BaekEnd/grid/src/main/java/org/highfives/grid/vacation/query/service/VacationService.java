@@ -15,7 +15,9 @@ public interface VacationService {
 
     List<VacationHistoryDTO> getAllVacationHistory();
 
-    List<VacationInfoDTO> serachVacationInfoByName(String name);
+    List<VacationInfoDTO> searchVacationInfoByName(String name);
 
-    List<VacationInfoDTO> serachVacationInfoByDept(String dept);
+    List<VacationInfoDTO> searchVacationInfoByDept(String dept);
+
+    List<VacationHistoryDTO> searchVacationHistory(int typeId, int changeTypeId, int employeeId);
 }

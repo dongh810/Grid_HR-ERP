@@ -21,4 +21,6 @@ public interface VacationMapper {
     List<VacationInfo> searchVacationInfoByName(String name);
 
     List<VacationInfo> searchVacationInfoByDept(String dept);
+
+    List<VacationHistory> searchVacationHistories(int typeId, int changeTypeId, int employeeId);
 }

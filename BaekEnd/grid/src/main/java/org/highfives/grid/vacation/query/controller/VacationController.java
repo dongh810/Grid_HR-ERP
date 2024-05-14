@@ -45,15 +45,22 @@ public class VacationController {
         return ResponseEntity.status(HttpStatus.OK).body(histories);
     }
 
+    @GetMapping("/history/search")
+    public ResponseEntity<List<VacationHistoryDTO>> searchVacationHistories(@RequestParam("typeId") int typeId, @RequestParam("changeTypeId") int changeTypeId, @RequestParam("employeeId") int employeeId ) {
+        List<VacationHistoryDTO> histories = vacationService.searchVacationHistory(typeId, changeTypeId, employeeId);
+        return ResponseEntity.status(HttpStatus.OK).body(histories);
+
+    }
+
     @GetMapping("/name/search")
-    public ResponseEntity<List<VacationInfoDTO>> serachVacationInfoByName(@RequestParam("name") String name) {
-        List<VacationInfoDTO> vacations = vacationService.serachVacationInfoByName(name);
+    public ResponseEntity<List<VacationInfoDTO>> searchVacationInfoByName(@RequestParam("name") String name) {
+        List<VacationInfoDTO> vacations = vacationService.searchVacationInfoByName(name);
         return ResponseEntity.status(HttpStatus.OK).body(vacations);
     }
 
     @GetMapping("/dept/search")
-    public ResponseEntity<List<VacationInfoDTO>> serachVacationInfoByDept(@RequestParam("dept") String dept) {
-        List<VacationInfoDTO> vacations = vacationService.serachVacationInfoByDept(dept);
+    public ResponseEntity<List<VacationInfoDTO>> searchVacationInfoByDept(@RequestParam("dept") String dept) {
+        List<VacationInfoDTO> vacations = vacationService.searchVacationInfoByDept(dept);
         return ResponseEntity.status(HttpStatus.OK).body(vacations);
     }
 

@@ -88,4 +88,15 @@
         JOIN DEPARTMENT DE ON EM.DEPARTMENT_ID = DE.ID
         WHERE DE.DEPARTMENT_NAME LIKE CONCAT('%',#{DEPT},'%')
     </select>
+    <select id="searchVacationHistories" parameterType="org.highfives.grid.vacation.query.vo.HistorySearch" resultMap="vacationHistoryResultMap">
+        SELECT
+        ID,
+        CHANGE_TIME,
+        CHANGE_REASON,
+        TYPE_ID,
+        CHANGE_TYPE_ID,
+        EMPLOYEE_ID
+        FROM VACATION_HISTORY
+        WHERE TYPE_ID = #{typeId} AND EMPLOYEE_ID = #{employeeId} AND CHANGE_TYPE_ID = #{changeTypeId}
+    </select>
 </mapper>
