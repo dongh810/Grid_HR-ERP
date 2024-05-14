@@ -1,6 +1,7 @@
 package org.highfives.grid.vacation.command.controller;
 
 import org.highfives.grid.vacation.command.service.VacationService;
+import org.highfives.grid.vacation.command.vo.GiveVacation;
 import org.highfives.grid.vacation.command.vo.ModifyPolicy;
 import org.highfives.grid.vacation.command.vo.RegistPolicy;
 import org.highfives.grid.vacation.command.vo.RegistVacationType;
@@ -47,5 +48,10 @@ public class VacationController {
     @PostMapping("/type")
     public void registVacationType(@RequestBody RegistVacationType typeInfo) {
         vacationService.registVacationType(typeInfo);
+    }
+
+    @PostMapping("/payments")
+    public void giveVacationByManager(@RequestBody GiveVacation vacationInfo) {
+        vacationService.giveVacationByManager(vacationInfo);
     }
 }

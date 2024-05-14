@@ -13,6 +13,7 @@ import org.highfives.grid.vacation.command.repository.VacationHistoryRepository;
 import org.highfives.grid.vacation.command.repository.VacationInfoRepository;
 import org.highfives.grid.vacation.command.repository.VacationPolicyRepository;
 import org.highfives.grid.vacation.command.repository.VacationTypeRepository;
+import org.highfives.grid.vacation.command.vo.GiveVacation;
 import org.highfives.grid.vacation.command.vo.ModifyPolicy;
 import org.highfives.grid.vacation.command.vo.RegistPolicy;
 import org.highfives.grid.vacation.command.vo.RegistVacationType;
@@ -294,6 +295,18 @@ public class VacationServiceImpl implements VacationService {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         VacationType vacationType = modelMapper.map(typeInfo, VacationType.class);
         vacationTypeRepository.save(vacationType);
+    }
+
+    @Override
+    @Transactional
+    public void giveVacationByManager(GiveVacation vacationInfo) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        VacationInfo inputVacationInfo = modelMapper.map(vacationInfo, VacationInfo.class);
+        LocalDate today = LocalDate.now();
+        String day = today.toString();
+        inputVacationInfo.setAddTime(day);
+        vacationInfoRepository.save(inputVacationInfo);
+
     }
 
     // HashMap을 활용하여 유저 id와 받아야 할 휴가의 개수를 저장하는 메서드
