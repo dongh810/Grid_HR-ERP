@@ -221,12 +221,41 @@ public class VacationServiceImpl implements VacationService {
     @Transactional
 //    @Scheduled(cron = "0 0 0 1 1 ?")
     public void giveHealthVacation() {
-        LocalDate firstDayOfYear = LocalDate.now().withDayOfYear(1);
-        String firstDayString = firstDayOfYear.toString();
-        LocalDate lastDayOfYear = LocalDate.now().withDayOfYear(LocalDate.now().lengthOfYear());
-        String lastDayString = lastDayOfYear.toString();
+        LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
+        String firstDayString = firstDayOfMonth.toString();
+        LocalDate lastDayOfMonth = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
+        String lastDayString = lastDayOfMonth.toString();
         List<Employee> employees = userService.getAllUserinfo();
 
+        // 기존의 보건휴가가 남아있으면 지우고, 그 이력을 vacation_history에 저장
+        for (int i = 1; i < employees.size(); i++) {
+            if (employees.get(i).getGender().equals("F")) {
+                int userId = employees.get(i).getId();
+                try{
+                    if(vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 2) != null) {
+                        if(vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 2).getVacationNum() != 0) {
+                            vacationInfoRepository.deleteByTypeIdAndEmployeeId(2,userId);
+                            VacationHistory inputVacationHistory = new VacationHistory();
+
+                            inputVacationHistory.setChangeTime(firstDayString);
+                            inputVacationHistory.setChangeReason("사용기한 만료로 인한 보건휴가 소멸");
+                            inputVacationHistory.setTypeId(2);
+                            inputVacationHistory.setChangeTypeId(2);
+                            inputVacationHistory.setEmployeeId(userId);
+
+                            vacationHistoryRepository.save(inputVacationHistory);
+                        } else {
+                            vacationInfoRepository.deleteByTypeIdAndEmployeeId(3,userId);
+                        }
+                    }
+                } catch(NullPointerException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+        // 보건휴가를 새로 insert 하고, 그 이력을 vacation_history에 저장
         for (int i = 1; i < employees.size(); i++) {
             if (employees.get(i).getGender().equals("F")) {
                 int userId = employees.get(i).getId();
@@ -239,6 +268,16 @@ public class VacationServiceImpl implements VacationService {
                 inputVacationInfo.setTypeId(2);
 
                 vacationInfoRepository.save(inputVacationInfo);
+
+                VacationHistory inputVacationHistory = new VacationHistory();
+
+                inputVacationHistory.setChangeTime(firstDayString);
+                inputVacationHistory.setChangeReason("월 갱신에 따른 보건휴가 자동 부여");
+                inputVacationHistory.setTypeId(2);
+                inputVacationHistory.setChangeTypeId(1);
+                inputVacationHistory.setEmployeeId(userId);
+
+                vacationHistoryRepository.save(inputVacationHistory);
             }
         }
     }
