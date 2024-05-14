@@ -10,5 +10,13 @@ public interface VacationService {
 
     void registVacationPolicy(RegistPolicy policyInfo);
 
+//    void giveAnnualVacationAfterYear();
+
+    void giveRegularVacation();
+
+    void giveHealthVacation();
+
+//    void giveAnnualVacationBeforeYear();
+
     void giveAnnualVacation();
 }
