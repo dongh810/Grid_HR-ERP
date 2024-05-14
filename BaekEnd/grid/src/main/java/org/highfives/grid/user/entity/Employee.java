@@ -20,8 +20,8 @@ public class Employee {
     @Column(nullable = false, name= "pwd")
     private String pwd;
 
-    @Column(nullable = false, name = "name")
-    private String name;
+    @Column(nullable = false, name = "employee_name")
+    private String employeeName;
 
     @Column(nullable = false, name = "employee_number")
     private String employeeNumber;
