@@ -3,6 +3,7 @@ package org.highfives.grid.vacation.command.controller;
 import org.highfives.grid.vacation.command.service.VacationService;
 import org.highfives.grid.vacation.command.vo.ModifyPolicy;
 import org.highfives.grid.vacation.command.vo.RegistPolicy;
+import org.highfives.grid.vacation.command.vo.RegistVacationType;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,14 @@ public class VacationController {
 
     @GetMapping("/test")
     public void test() {
-        vacationService.giveAnnualVacation();
+//        vacationService.giveAnnualVacationAfterYear();
+//        vacationService.giveAnnualVacation();
+//        vacationService.giveRegularVacation();
+        vacationService.giveHealthVacation();
+    }
+
+    @PostMapping("/type")
+    public void registVacationType(@RequestBody RegistVacationType typeInfo) {
+        vacationService.registVacationType(typeInfo);
     }
 }

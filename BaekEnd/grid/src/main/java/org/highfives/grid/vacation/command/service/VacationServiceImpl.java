@@ -8,11 +8,14 @@ import org.highfives.grid.vacation.command.dto.VacationInfoDTO;
 import org.highfives.grid.vacation.command.entity.VacationHistory;
 import org.highfives.grid.vacation.command.entity.VacationInfo;
 import org.highfives.grid.vacation.command.entity.VacationPolicy;
+import org.highfives.grid.vacation.command.entity.VacationType;
 import org.highfives.grid.vacation.command.repository.VacationHistoryRepository;
 import org.highfives.grid.vacation.command.repository.VacationInfoRepository;
 import org.highfives.grid.vacation.command.repository.VacationPolicyRepository;
+import org.highfives.grid.vacation.command.repository.VacationTypeRepository;
 import org.highfives.grid.vacation.command.vo.ModifyPolicy;
 import org.highfives.grid.vacation.command.vo.RegistPolicy;
+import org.highfives.grid.vacation.command.vo.RegistVacationType;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +34,19 @@ public class VacationServiceImpl implements VacationService {
     private VacationInfoRepository vacationInfoRepository;
     private VacationHistoryRepository vacationHistoryRepository;
 
+    private VacationTypeRepository vacationTypeRepository;
+
     private UserService userService;
     private ModelMapper modelMapper;
 
     @Autowired
-    public VacationServiceImpl(VacationPolicyRepository vacationPolicyRepository, ModelMapper modelMapper, UserService userService, VacationInfoRepository vacationInfoRepository, VacationHistoryRepository vacationHistoryRepository) {
+    public VacationServiceImpl(VacationPolicyRepository vacationPolicyRepository, ModelMapper modelMapper, UserService userService, VacationInfoRepository vacationInfoRepository, VacationHistoryRepository vacationHistoryRepository, VacationTypeRepository vacationTypeRepository) {
         this.vacationPolicyRepository = vacationPolicyRepository;
         this.modelMapper = modelMapper;
         this.userService = userService;
         this.vacationInfoRepository = vacationInfoRepository;
         this.vacationHistoryRepository = vacationHistoryRepository;
+        this.vacationTypeRepository = vacationTypeRepository;
     }
 
     @Override
@@ -280,6 +286,14 @@ public class VacationServiceImpl implements VacationService {
                 vacationHistoryRepository.save(inputVacationHistory);
             }
         }
+    }
+
+    @Override
+    @Transactional
+    public void registVacationType(RegistVacationType typeInfo) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        VacationType vacationType = modelMapper.map(typeInfo, VacationType.class);
+        vacationTypeRepository.save(vacationType);
     }
 
     // HashMap을 활용하여 유저 id와 받아야 할 휴가의 개수를 저장하는 메서드
