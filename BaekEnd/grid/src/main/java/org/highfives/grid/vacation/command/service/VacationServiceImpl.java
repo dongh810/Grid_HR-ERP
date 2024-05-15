@@ -71,75 +71,47 @@ public class VacationServiceImpl implements VacationService {
         vacationPolicyRepository.save(vacationPolicy);
     }
 
-    // 각각의 직원이 몇개의 연차를 받아야 하는지 계산된것을 바탕으로 insert하는 메서드 (입사 후 1년이후)
-//    @Override
-//    @Transactional
-////    @Scheduled(cron = "0 0 0 1 1 ?")
-//    public void giveAnnualVacationAfterYear() {
-//        LocalDate firstDayOfYear = LocalDate.now().withDayOfYear(1);
-//        String firstDayString = firstDayOfYear.toString();
-//        LocalDate lastDayOfYear = LocalDate.now().withDayOfYear(LocalDate.now().lengthOfYear());
-//        String lastDayString = lastDayOfYear.toString();
-//        HashMap<Integer, Integer> userVacationInfo = getVacationInfo();
-//
-//        for (Map.Entry<Integer, Integer> entry : userVacationInfo.entrySet()) {
-//            Integer userId = entry.getKey();
-//            Integer vacationNum = entry.getValue();
-//            VacationInfo inputVacationInfo = new VacationInfo();
-//
-//            inputVacationInfo.setVacationNum(vacationNum);
-//            inputVacationInfo.setAddTime(firstDayString);
-//            inputVacationInfo.setEndTime(lastDayString);
-//            inputVacationInfo.setEmployeeId(userId);
-//            inputVacationInfo.setTypeId(1);
-//
-//            vacationInfoRepository.save(inputVacationInfo);
-//
-//        }
-//    }
-//
-//    // 입사후 일년 전에는 한달에 한개씩의 연차 제공
-//    @Override
-//    @Transactional
-//    public void giveAnnualVacationBeforeYear() {
-//        LocalDate firstDayOfYear = LocalDate.now().withDayOfYear(1);
-//        String firstDayString = firstDayOfYear.toString();
-//        LocalDate lastDayOfYear = LocalDate.now().withDayOfYear(LocalDate.now().lengthOfYear());
-//        String lastDayString = lastDayOfYear.toString();
-//        HashMap<Integer, Integer> userVacationInfo = getVacationInfoBeforeYear();
-//
-//        for (Map.Entry<Integer, Integer> entry : userVacationInfo.entrySet()) {
-//            Integer userId = entry.getKey();
-//            Integer vacationNum = entry.getValue();
-//            VacationInfo inputVacationInfo = new VacationInfo();
-//
-//            inputVacationInfo.setVacationNum(vacationNum);
-//            inputVacationInfo.setAddTime(firstDayString);
-//            inputVacationInfo.setEndTime(lastDayString);
-//            inputVacationInfo.setEmployeeId(userId);
-//            inputVacationInfo.setTypeId(1);
-//
-//            vacationInfoRepository.save(inputVacationInfo);
-//
-//        }
-//    }
-
+    // 입사한지 1년이 안된 직원들에게 달에 한개씩 월차를 제공하는 메서드
     @Override
     @Transactional
-    public void giveAnnualVacation() {
-        LocalDate firstDayOfYear = LocalDate.now().withDayOfYear(1);
-        String firstDayString = firstDayOfYear.toString();
-        LocalDate lastDayOfYear = LocalDate.now().withDayOfYear(LocalDate.now().lengthOfYear());
-        String lastDayString = lastDayOfYear.toString();
+    public void giveAnnualVacationBeforeYear() {
+        LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
+        String firstDayString = firstDayOfMonth.toString();
+        LocalDate lastDayOfMonth = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
+        String lastDayString = lastDayOfMonth.toString();
         List<Employee> employees = userService.getAllUserinfo();
 
+        // 1년은 안되고, 1달은 지난 직원이 사용안한 월차가 있으면 삭제하고 그 기록을 vacation_history에 저장
         for (int i=1 ; i<employees.size() ; i++ ) {
-            int day = countDays(i+1);
-            System.out.println(day);
-            int months = countMonths(i+1);
-            System.out.println(months);
-            int valiNum = countVacationInfo(i+1);
-            System.out.println(valiNum);
+            int userId = employees.get(i).getId();
+            int day = countDays(userId);
+            int months = countMonths(userId);
+
+            if(day < 365 && months >= 1) {
+                if(vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 4) != null) {
+                    if(vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 4).getVacationNum() != 0) {
+                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(4,userId);
+                        VacationHistory inputVacationHistory = new VacationHistory();
+
+                        inputVacationHistory.setChangeTime(firstDayString);
+                        inputVacationHistory.setChangeReason("사용기한 만료로 인한 월차 소멸");
+                        inputVacationHistory.setTypeId(4);
+                        inputVacationHistory.setChangeTypeId(2);
+                        inputVacationHistory.setEmployeeId(userId);
+
+                        vacationHistoryRepository.save(inputVacationHistory);
+                    } else {
+                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(4,userId);
+                    }
+                }
+            }
+        }
+
+        // 1년은 안되고, 1달은 지난 직원에게 월차를 제공하고 그 기록을 vacation_history에 저장
+        for (int i = 1; i < employees.size(); i++) {
+            int userId = employees.get(i).getId();
+            int day = countDays(userId);
+            int months = countMonths(userId);
 
             if(day < 365 && months >= 1) {
                 VacationInfo inputVacationInfo = new VacationInfo();
@@ -147,24 +119,111 @@ public class VacationServiceImpl implements VacationService {
                 inputVacationInfo.setVacationNum(1);
                 inputVacationInfo.setAddTime(firstDayString);
                 inputVacationInfo.setEndTime(lastDayString);
-                inputVacationInfo.setEmployeeId(i+1);
-                inputVacationInfo.setTypeId(1);
+                inputVacationInfo.setEmployeeId(userId);
+                inputVacationInfo.setTypeId(4);
 
                 vacationInfoRepository.save(inputVacationInfo);
-            } else if(day > 365 && valiNum != 0) {
-                VacationInfo inputVacationInfo = new VacationInfo();
 
-                inputVacationInfo.setVacationNum(valiNum);
-                inputVacationInfo.setAddTime(firstDayString);
-                inputVacationInfo.setEndTime(lastDayString);
-                inputVacationInfo.setEmployeeId(i+1);
-                inputVacationInfo.setTypeId(1);
+                VacationHistory inputVacationHistory = new VacationHistory();
 
-                vacationInfoRepository.save(inputVacationInfo);
+                inputVacationHistory.setChangeTime(firstDayString);
+                inputVacationHistory.setChangeReason("월 갱신에 따른 월차 자동 부여");
+                inputVacationHistory.setTypeId(4);
+                inputVacationHistory.setChangeTypeId(1);
+                inputVacationHistory.setEmployeeId(userId);
+
+                vacationHistoryRepository.save(inputVacationHistory);
             }
 
         }
+    }
 
+    // 입사한지 1년이 지난 직원들에게 연차를 제공하는 메서드
+    @Override
+    @Transactional
+    public void giveAnnualVacationAfterYear() {
+        LocalDate firstDayOfYear = LocalDate.now().withDayOfYear(1);
+        String firstDayString = firstDayOfYear.toString();
+        LocalDate lastDayOfYear = LocalDate.now().withDayOfYear(LocalDate.now().lengthOfYear());
+        String lastDayString = lastDayOfYear.toString();
+        List<Employee> employees = userService.getAllUserinfo();
+
+        // 입사 후 1년이 지난 직원들이 사용안한 연차가 있다면 삭제하고 그 기록을 vacation_history에 저장
+        for (int i=1 ; i<employees.size() ; i++ ) {
+            int userId = employees.get(i).getId();
+            int day = countDays(userId);
+
+            if(day >= 365) {
+                if(vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 1) != null) {
+                    if(vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 1).getVacationNum() != 0) {
+                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(1,userId);
+                        VacationHistory inputVacationHistory = new VacationHistory();
+
+                        inputVacationHistory.setChangeTime(firstDayString);
+                        inputVacationHistory.setChangeReason("사용기한 만료로 인한 연차 소멸");
+                        inputVacationHistory.setTypeId(1);
+                        inputVacationHistory.setChangeTypeId(2);
+                        inputVacationHistory.setEmployeeId(userId);
+
+                        vacationHistoryRepository.save(inputVacationHistory);
+                    } else {
+                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(1,userId);
+                    }
+                }
+            }
+        }
+
+        // 입사 후 1년이 지난 직원들에게 연차를 제공하고 그 기록을 vacation_history에 저장
+        for (int i = 1; i < employees.size(); i++) {
+            int userId = employees.get(i).getId();
+            int day = countDays(userId);
+            int months = countMonths(userId);
+            int vacationNum = countVacation(day);
+
+            if(day >= 365) {
+                VacationInfo inputVacationInfo = new VacationInfo();
+
+                inputVacationInfo.setVacationNum(vacationNum);
+                inputVacationInfo.setAddTime(firstDayString);
+                inputVacationInfo.setEndTime(lastDayString);
+                inputVacationInfo.setEmployeeId(userId);
+                inputVacationInfo.setTypeId(1);
+
+                vacationInfoRepository.save(inputVacationInfo);
+
+                VacationHistory inputVacationHistory = new VacationHistory();
+
+                inputVacationHistory.setChangeTime(firstDayString);
+                inputVacationHistory.setChangeReason("연도 갱신에 따른 연차 자동 부여");
+                inputVacationHistory.setTypeId(1);
+                inputVacationHistory.setChangeTypeId(1);
+                inputVacationHistory.setEmployeeId(userId);
+
+                vacationHistoryRepository.save(inputVacationHistory);
+            // 1년이 안된 직원들은 작년에 얼마나 다녔는지에 따라 당해 연차를 제공
+            } else if (day < 365 && months >= 1) {
+                VacationInfo inputVacationInfo = new VacationInfo();
+
+                inputVacationInfo.setVacationNum(months);
+                inputVacationInfo.setAddTime(firstDayString);
+                inputVacationInfo.setEndTime(lastDayString);
+                inputVacationInfo.setEmployeeId(userId);
+                inputVacationInfo.setTypeId(1);
+
+                vacationInfoRepository.save(inputVacationInfo);
+
+                VacationHistory inputVacationHistory = new VacationHistory();
+
+                inputVacationHistory.setChangeTime(firstDayString);
+                inputVacationHistory.setChangeReason("연도 갱신에 따른 연차 자동 부여");
+                inputVacationHistory.setTypeId(1);
+                inputVacationHistory.setChangeTypeId(1);
+                inputVacationHistory.setEmployeeId(userId);
+
+                vacationHistoryRepository.save(inputVacationHistory);
+            }
+
+        }
     }
 
     // 각각의 직원에게 정기휴가를 insert하는 메서드
@@ -309,23 +368,6 @@ public class VacationServiceImpl implements VacationService {
 
     }
 
-    // HashMap을 활용하여 유저 id와 받아야 할 휴가의 개수를 저장하는 메서드
-//    private HashMap<Integer, Integer> getVacationInfo() {
-//        List<Integer> annuals = countDays();
-//        HashMap<Integer, Integer> userVacationInfo = new HashMap<>();
-//
-//        for (int i = 0; i < annuals.size(); i++) {
-//
-//            if (annuals.get(i) >= 365) {
-//                int vacationNum = countVacation(annuals.get(i));
-//                userVacationInfo.put(i + 2, vacationNum);
-//            }
-//        }
-//
-//        return userVacationInfo;
-//
-//    }
-
     // 입사이후 총 몇일이 지났는지 계산하는 메서드
     private int countDays(int userId) {
         Optional<Employee> employees = userService.getUserInfo(userId);
@@ -342,6 +384,7 @@ public class VacationServiceImpl implements VacationService {
         return annuals;
     }
 
+    // 입사이후 총 몇달이 지났는지 계산하는 메서드
     private int countMonths(int userId) {
         Optional<Employee> employee= userService.getUserInfo(userId);
         LocalDate today = LocalDate.now();
@@ -432,8 +475,6 @@ public class VacationServiceImpl implements VacationService {
         if(vacationInfo.isPresent()) {
             LocalDate today = LocalDate.now();
             int currentYear = Year.now().getValue();
-
-
             LocalDate startDate = LocalDate.of(currentYear, 1, 1);
 
             Period period = Period.between(startDate, today);
