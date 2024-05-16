@@ -178,7 +178,7 @@ public class VacationServiceImpl implements VacationService {
             int userId = employees.get(i).getId();
             int day = countDays(userId);
             int months = countMonths(userId);
-            int vacationNum = countVacation(day);
+            double vacationNum = countVacation(day);
 
             if(day >= 365) {
                 VacationInfo inputVacationInfo = new VacationInfo();
@@ -459,9 +459,9 @@ public class VacationServiceImpl implements VacationService {
     }
 
     // 몇년차 인지에 따라 연차 개수를 부여하는 메서드
-    private int countVacation(int days) {
+    private double countVacation(int days) {
         int year = days / 365;
-        int vacation = 0;
+        double vacation = 0;
         if (year >= 1 && year < 3) {
             vacation = 15;
         } else if (year < 5) {
