@@ -23,4 +23,8 @@ public interface VacationService {
     void registVacationType(RegistVacationType typeInfo);
 
     void giveVacationByManager(GiveVacation vacationInfo);
+
+    void plusVacationNum(int employeeId, int typeId);
+
+    void minusVacationNum(int employeeId, int typeId);
 }

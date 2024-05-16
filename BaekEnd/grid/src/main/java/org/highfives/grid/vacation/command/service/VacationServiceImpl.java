@@ -368,6 +368,45 @@ public class VacationServiceImpl implements VacationService {
 
     }
 
+    @Override
+    @Transactional
+    public void plusVacationNum(int employeeId, int typeId) {
+        VacationInfo vacationInfo = vacationInfoRepository.findByEmployeeIdAndTypeId(employeeId, typeId);
+        VacationHistory inputVacationHistory = new VacationHistory();
+        LocalDate today = LocalDate.now();
+        String vacationTypeName = vacationTypeRepository.findById((long) typeId).get().getTypeName();
+
+        vacationInfo.setVacationNum(vacationInfo.getVacationNum()+1);
+
+        inputVacationHistory.setChangeTime(today.toString());
+        inputVacationHistory.setChangeReason(vacationTypeName + " 사용취소로 인한 " + vacationTypeName + " 개수 증가");
+        inputVacationHistory.setTypeId(typeId);
+        inputVacationHistory.setChangeTypeId(4);
+        inputVacationHistory.setEmployeeId(employeeId);
+
+        vacationHistoryRepository.save(inputVacationHistory);
+
+    }
+
+    @Override
+    @Transactional
+    public void minusVacationNum(int employeeId, int typeId) {
+        VacationInfo vacationInfo = vacationInfoRepository.findByEmployeeIdAndTypeId(employeeId, typeId);
+        VacationHistory inputVacationHistory = new VacationHistory();
+        LocalDate today = LocalDate.now();
+        String vacationTypeName = vacationTypeRepository.findById((long) typeId).get().getTypeName();
+
+        vacationInfo.setVacationNum(vacationInfo.getVacationNum()-1);
+
+        inputVacationHistory.setChangeTime(today.toString());
+        inputVacationHistory.setChangeReason(vacationTypeName + " 사용으로 인한 " + vacationTypeName + " 개수 감소");
+        inputVacationHistory.setTypeId(typeId);
+        inputVacationHistory.setChangeTypeId(3);
+        inputVacationHistory.setEmployeeId(employeeId);
+
+        vacationHistoryRepository.save(inputVacationHistory);
+    }
+
     // 입사이후 총 몇일이 지났는지 계산하는 메서드
     private int countDays(int userId) {
         Optional<Employee> employees = userService.getUserInfo(userId);

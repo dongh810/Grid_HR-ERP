@@ -14,12 +14,10 @@ import org.springframework.web.bind.annotation.*;
 public class VacationController {
 
     private VacationService vacationService;
-    private ModelMapper modelMapper;
 
     @Autowired
-    public VacationController(VacationService vacationService, ModelMapper modelMapper) {
+    public VacationController(VacationService vacationService) {
         this.vacationService = vacationService;
-        this.modelMapper = modelMapper;
     }
 
     @PutMapping("/policy/{id}")
@@ -44,6 +42,12 @@ public class VacationController {
 //        vacationService.giveRegularVacation();
         vacationService.giveHealthVacation();
     }
+
+    @GetMapping("/countTest")
+    public void countTest(@RequestParam("employeeId") int employeeId, @RequestParam("typeId") int typeId) {
+        vacationService.minusVacationNum(employeeId, typeId);
+    }
+
 
     @PostMapping("/type")
     public void registVacationType(@RequestBody RegistVacationType typeInfo) {
