@@ -371,12 +371,22 @@ public class VacationServiceImpl implements VacationService {
     @Override
     @Transactional
     public void plusVacationNum(int employeeId, int typeId) {
-        VacationInfo vacationInfo = vacationInfoRepository.findByEmployeeIdAndTypeId(employeeId, typeId);
+        VacationInfo vacationInfo = new VacationInfo();
+        if(typeId == 5 || typeId == 6) {
+            vacationInfo = vacationInfoRepository.findByEmployeeIdAndTypeId(employeeId, 1);
+        } else {
+            vacationInfo = vacationInfoRepository.findByEmployeeIdAndTypeId(employeeId, typeId);
+        }
         VacationHistory inputVacationHistory = new VacationHistory();
         LocalDate today = LocalDate.now();
         String vacationTypeName = vacationTypeRepository.findById((long) typeId).get().getTypeName();
 
-        vacationInfo.setVacationNum(vacationInfo.getVacationNum()+1);
+        if(typeId == 5) {
+            vacationInfo.setVacationNum(vacationInfo.getVacationNum()+0.5);
+        } else if(typeId == 6) {
+            vacationInfo.setVacationNum(vacationInfo.getVacationNum()+0.25);
+        } else
+            vacationInfo.setVacationNum(vacationInfo.getVacationNum()+1);
 
         inputVacationHistory.setChangeTime(today.toString());
         inputVacationHistory.setChangeReason(vacationTypeName + " 사용취소로 인한 " + vacationTypeName + " 개수 증가");
@@ -391,12 +401,22 @@ public class VacationServiceImpl implements VacationService {
     @Override
     @Transactional
     public void minusVacationNum(int employeeId, int typeId) {
-        VacationInfo vacationInfo = vacationInfoRepository.findByEmployeeIdAndTypeId(employeeId, typeId);
+        VacationInfo vacationInfo = new VacationInfo();
+        if(typeId == 5 || typeId == 6) {
+            vacationInfo = vacationInfoRepository.findByEmployeeIdAndTypeId(employeeId, 1);
+        } else {
+            vacationInfo = vacationInfoRepository.findByEmployeeIdAndTypeId(employeeId, typeId);
+        }
         VacationHistory inputVacationHistory = new VacationHistory();
         LocalDate today = LocalDate.now();
         String vacationTypeName = vacationTypeRepository.findById((long) typeId).get().getTypeName();
 
-        vacationInfo.setVacationNum(vacationInfo.getVacationNum()-1);
+        if(typeId == 5) {
+            vacationInfo.setVacationNum(vacationInfo.getVacationNum()-0.5);
+        } else if(typeId == 6) {
+            vacationInfo.setVacationNum(vacationInfo.getVacationNum()-0.25);
+        } else
+            vacationInfo.setVacationNum(vacationInfo.getVacationNum()-1);
 
         inputVacationHistory.setChangeTime(today.toString());
         inputVacationHistory.setChangeReason(vacationTypeName + " 사용으로 인한 " + vacationTypeName + " 개수 감소");
