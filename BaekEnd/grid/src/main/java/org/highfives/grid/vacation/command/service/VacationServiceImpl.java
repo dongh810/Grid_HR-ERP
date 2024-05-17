@@ -29,7 +29,7 @@ import java.util.Optional;
 
 @Service(value = "VacationCommandService")
 @Slf4j
-public class VacationServiceImpl implements VacationService{
+public class VacationServiceImpl implements VacationService {
 
     private VacationPolicyRepository vacationPolicyRepository;
     private VacationInfoRepository vacationInfoRepository;
@@ -51,14 +51,14 @@ public class VacationServiceImpl implements VacationService{
     @Override
     @Transactional
     public void modifyVacationPolicy(ModifyPolicy policyInfo, int id) {
-        VacationPolicy foundPolicy = vacationPolicyRepository.findById(Long.valueOf(id)).orElseThrow(IllegalAccessError::new);
+        VacationPolicy foundPolicy = vacationPolicyRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         foundPolicy.setContent(policyInfo.getContent());
     }
 
     @Override
     @Transactional
     public void deleteVacationPolicy(int id) {
-        vacationPolicyRepository.deleteById(Long.valueOf(id));
+        vacationPolicyRepository.deleteById(id);
     }
 
     @Override
@@ -82,26 +82,26 @@ public class VacationServiceImpl implements VacationService{
         List<Employee> employees = userService.getAllUserinfo();
 
         // 1년은 안되고, 1달은 지난 직원이 사용안한 월차가 있으면 삭제하고 그 기록을 vacation_history에 저장
-        for (int i=1 ; i<employees.size() ; i++ ) {
+        for (int i = 1; i < employees.size(); i++) {
             int userId = employees.get(i).getId();
             int day = countDays(userId);
             int months = countMonths(userId);
 
-            if(day < 365 && months >= 1) {
-                if(vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 4) != null) {
-                    if(vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 4).getVacationNum() != 0) {
-                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(4,userId);
+            if (day < 365 && months >= 1) {
+                if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 4) != null) {
+                    if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 4).getVacationNum() != 0) {
+                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(4, userId);
                         VacationHistory inputVacationHistory = VacationHistory.builder()
                                 .changeTime(firstDayString)
                                 .changeReason("사용기한 만료로 인한 월차 소멸")
-                                .typeId(4)
+                                .typeId(2)
                                 .changeTypeId(2)
                                 .employeeId(userId)
                                 .build();
 
                         vacationHistoryRepository.save(inputVacationHistory);
                     } else {
-                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(4,userId);
+                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(4, userId);
                     }
                 }
             }
@@ -113,13 +113,13 @@ public class VacationServiceImpl implements VacationService{
             int day = countDays(userId);
             int months = countMonths(userId);
 
-            if(day < 365 && months >= 1) {
+            if (day < 365 && months >= 1) {
                 VacationInfo inputVacationInfo = VacationInfo.builder()
                         .vacationNum(1)
                         .addTime(firstDayString)
                         .endTime(lastDayString)
                         .employeeId(userId)
-                        .typeId(4)
+                        .typeId(2)
                         .build();
 
                 vacationInfoRepository.save(inputVacationInfo);
@@ -127,7 +127,7 @@ public class VacationServiceImpl implements VacationService{
                 VacationHistory inputVacationHistory = VacationHistory.builder()
                         .changeTime(firstDayString)
                         .changeReason("월 갱신에 따른 월차 자동 부여")
-                        .typeId(4)
+                        .typeId(2)
                         .changeTypeId(1)
                         .employeeId(userId)
                         .build();
@@ -148,14 +148,14 @@ public class VacationServiceImpl implements VacationService{
         List<Employee> employees = userService.getAllUserinfo();
 
         // 입사 후 1년이 지난 직원들이 사용안한 연차가 있다면 삭제하고 그 기록을 vacation_history에 저장
-        for (int i=1 ; i<employees.size() ; i++ ) {
+        for (int i = 1; i < employees.size(); i++) {
             int userId = employees.get(i).getId();
             int day = countDays(userId);
 
-            if(day >= 365) {
-                if(vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 1) != null) {
-                    if(vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 1).getVacationNum() != 0) {
-                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(1,userId);
+            if (day >= 365) {
+                if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 1) != null) {
+                    if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 1).getVacationNum() != 0) {
+                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(1, userId);
 
                         VacationHistory inputVacationHistory = VacationHistory.builder()
                                 .changeTime(firstDayString)
@@ -167,7 +167,7 @@ public class VacationServiceImpl implements VacationService{
 
                         vacationHistoryRepository.save(inputVacationHistory);
                     } else {
-                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(1,userId);
+                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(1, userId);
                     }
                 }
             }
@@ -180,7 +180,7 @@ public class VacationServiceImpl implements VacationService{
             int months = countMonths(userId);
             double vacationNum = countVacation(day);
 
-            if(day >= 365) {
+            if (day >= 365) {
                 VacationInfo inputVacationInfo = VacationInfo.builder()
                         .vacationNum(vacationNum)
                         .addTime(firstDayString)
@@ -241,21 +241,21 @@ public class VacationServiceImpl implements VacationService{
         for (int i = 1; i < employees.size(); i++) {
             int userId = employees.get(i).getId();
 
-            try{
-                if(vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 3) != null) {
-                    if(vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 3).getVacationNum() != 0) {
-                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(3,userId);
+            try {
+                if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 3) != null) {
+                    if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 3).getVacationNum() != 0) {
+                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(3, userId);
                         VacationHistory inputVacationHistory = VacationHistory.builder()
                                 .changeTime(firstDayString)
                                 .changeReason("사용기한 만료로 인한 정기휴가 소멸")
-                                .typeId(3)
+                                .typeId(4)
                                 .changeTypeId(2)
                                 .employeeId(userId)
                                 .build();
 
                         vacationHistoryRepository.save(inputVacationHistory);
                     } else {
-                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(3,userId);
+                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(3, userId);
                     }
                 }
             } catch (NullPointerException e) {
@@ -273,7 +273,7 @@ public class VacationServiceImpl implements VacationService{
                     .addTime(firstDayString)
                     .endTime(lastDayString)
                     .employeeId(userId)
-                    .typeId(3)
+                    .typeId(4)
                     .build();
 
             vacationInfoRepository.save(inputVacationInfo);
@@ -281,7 +281,7 @@ public class VacationServiceImpl implements VacationService{
             VacationHistory inputVacationHistory = VacationHistory.builder()
                     .changeTime(firstDayString)
                     .changeReason("연도 갱신에 따른 정기휴가 자동 부여")
-                    .typeId(3)
+                    .typeId(4)
                     .changeTypeId(1)
                     .employeeId(userId)
                     .build();
@@ -305,25 +305,25 @@ public class VacationServiceImpl implements VacationService{
         for (int i = 1; i < employees.size(); i++) {
             if (employees.get(i).getGender().equals("F")) {
                 int userId = employees.get(i).getId();
-                try{
-                    if(vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 2) != null) {
-                        if(vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 2).getVacationNum() != 0) {
-                            vacationInfoRepository.deleteByTypeIdAndEmployeeId(2,userId);
+                try {
+                    if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 2) != null) {
+                        if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 2).getVacationNum() != 0) {
+                            vacationInfoRepository.deleteByTypeIdAndEmployeeId(2, userId);
 
                             VacationHistory inputVacationHistory = VacationHistory.builder()
                                     .changeTime(firstDayString)
                                     .changeReason("사용기한 만료로 인한 보건휴가 소멸")
-                                    .typeId(2)
+                                    .typeId(3)
                                     .changeTypeId(2)
                                     .employeeId(userId)
                                     .build();
 
                             vacationHistoryRepository.save(inputVacationHistory);
                         } else {
-                            vacationInfoRepository.deleteByTypeIdAndEmployeeId(3,userId);
+                            vacationInfoRepository.deleteByTypeIdAndEmployeeId(3, userId);
                         }
                     }
-                } catch(NullPointerException e) {
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
 
@@ -340,7 +340,7 @@ public class VacationServiceImpl implements VacationService{
                         .addTime(firstDayString)
                         .endTime(lastDayString)
                         .employeeId(userId)
-                        .typeId(2)
+                        .typeId(3)
                         .build();
 
                 vacationInfoRepository.save(inputVacationInfo);
@@ -348,7 +348,7 @@ public class VacationServiceImpl implements VacationService{
                 VacationHistory inputVacationHistory = VacationHistory.builder()
                         .changeTime(firstDayString)
                         .changeReason("월 갱신에 따른 보건휴가 자동 부여")
-                        .typeId(2)
+                        .typeId(3)
                         .changeTypeId(1)
                         .employeeId(userId)
                         .build();
@@ -383,41 +383,24 @@ public class VacationServiceImpl implements VacationService{
         vacationTypeRepository.save(vacationType);
     }
 
-
-    // 입사이후 총 몇일이 지났는지 계산하는 메서드
-    private int countDays(int userId) {
-        Optional<Employee> employees = userService.getUserInfo(userId);
-        LocalDateTime today = LocalDateTime.now();
-
-        String day = employees.get().getJoinTime();
-        LocalDate localDate = LocalDate.parse(day);
-        LocalDateTime joinDay = localDate.atStartOfDay();
-        Duration duration = Duration.between(joinDay, today);
-        long days = duration.toDays();
-        int annuals = ((int) days);
-
-
-        return annuals;
-    }
-
     @Override
     @Transactional
     public void plusVacationNum(int employeeId, int typeId) {
         VacationInfo vacationInfo = new VacationInfo();
-        if(typeId == 5 || typeId == 6) {
+        if (typeId == 5 || typeId == 6) {
             vacationInfo = vacationInfoRepository.findByEmployeeIdAndTypeId(employeeId, 1);
         } else {
             vacationInfo = vacationInfoRepository.findByEmployeeIdAndTypeId(employeeId, typeId);
         }
         LocalDate today = LocalDate.now();
-        String vacationTypeName = vacationTypeRepository.findById((long) typeId).get().getTypeName();
+        String vacationTypeName = vacationTypeRepository.findById(typeId).get().getTypeName();
 
-        if(typeId == 5) {
-            vacationInfo.setVacationNum(vacationInfo.getVacationNum()+0.5);
-        } else if(typeId == 6) {
-            vacationInfo.setVacationNum(vacationInfo.getVacationNum()+0.25);
+        if (typeId == 5) {
+            vacationInfo.setVacationNum(vacationInfo.getVacationNum() + 0.5);
+        } else if (typeId == 6) {
+            vacationInfo.setVacationNum(vacationInfo.getVacationNum() + 0.25);
         } else
-            vacationInfo.setVacationNum(vacationInfo.getVacationNum()+1);
+            vacationInfo.setVacationNum(vacationInfo.getVacationNum() + 1);
 
         VacationHistory inputVacationHistory = VacationHistory.builder()
                 .changeTime(today.toString())
@@ -435,20 +418,20 @@ public class VacationServiceImpl implements VacationService{
     @Transactional
     public void minusVacationNum(int employeeId, int typeId) {
         VacationInfo vacationInfo = new VacationInfo();
-        if(typeId == 5 || typeId == 6) {
+        if (typeId == 5 || typeId == 6) {
             vacationInfo = vacationInfoRepository.findByEmployeeIdAndTypeId(employeeId, 1);
         } else {
             vacationInfo = vacationInfoRepository.findByEmployeeIdAndTypeId(employeeId, typeId);
         }
         LocalDate today = LocalDate.now();
-        String vacationTypeName = vacationTypeRepository.findById((long) typeId).get().getTypeName();
+        String vacationTypeName = vacationTypeRepository.findById(typeId).get().getTypeName();
 
-        if(typeId == 5) {
-            vacationInfo.setVacationNum(vacationInfo.getVacationNum()-0.5);
-        } else if(typeId == 6) {
-            vacationInfo.setVacationNum(vacationInfo.getVacationNum()-0.25);
+        if (typeId == 5) {
+            vacationInfo.setVacationNum(vacationInfo.getVacationNum() - 0.5);
+        } else if (typeId == 6) {
+            vacationInfo.setVacationNum(vacationInfo.getVacationNum() - 0.25);
         } else
-            vacationInfo.setVacationNum(vacationInfo.getVacationNum()-1);
+            vacationInfo.setVacationNum(vacationInfo.getVacationNum() - 1);
 
         VacationHistory inputVacationHistory = VacationHistory.builder()
                 .changeTime(today.toString())
@@ -461,12 +444,28 @@ public class VacationServiceImpl implements VacationService{
         vacationHistoryRepository.save(inputVacationHistory);
     }
 
+    // 입사이후 총 몇일이 지났는지 계산하는 메서드
+    private int countDays(int userId) {
+        Employee employees = userService.getUserInfo(userId).orElseThrow(IllegalArgumentException::new);
+        LocalDateTime today = LocalDateTime.now();
+
+        String day = employees.getJoinTime();
+        LocalDate localDate = LocalDate.parse(day);
+        LocalDateTime joinDay = localDate.atStartOfDay();
+        Duration duration = Duration.between(joinDay, today);
+        long days = duration.toDays();
+        int annuals = ((int) days);
+
+
+        return annuals;
+    }
+
     // 입사이후 총 몇달이 지났는지 계산하는 메서드
     private int countMonths(int userId) {
-        Optional<Employee> employee= userService.getUserInfo(userId);
+        Employee employee = userService.getUserInfo(userId).orElseThrow(IllegalArgumentException::new);
         LocalDate today = LocalDate.now();
 
-        String day = employee.get().getJoinTime();
+        String day = employee.getJoinTime();
         LocalDate joinDate = LocalDate.parse(day);
 
         Period period = Period.between(joinDate, today);
