@@ -28,13 +28,13 @@ public class VacationController {
     }
 
     @GetMapping("/{employeeId}")
-    public ResponseEntity<List<VacationInfoDTO>> getUserVacations(@PathVariable("employeeId") int employeeId) {
+    public ResponseEntity<List<VacationInfoDTO>> getUserVacations(@PathVariable int employeeId) {
         List<VacationInfoDTO> vacations = vacationService.getUserVacations(employeeId);
         return ResponseEntity.status(HttpStatus.OK).body(vacations);
     }
 
     @GetMapping("/policy/{typeId}")
-    public ResponseEntity<List<VacationPolicyDTO>> getVacationPolicy(@PathVariable("typeId") int typeId) {
+    public ResponseEntity<List<VacationPolicyDTO>> getVacationPolicy(@PathVariable int typeId) {
         List<VacationPolicyDTO> policies = vacationService.getVacationPolicy(typeId);
         return ResponseEntity.status(HttpStatus.OK).body(policies);
     }
