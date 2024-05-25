@@ -1,12 +1,17 @@
 package org.highfives.grid.vacation.query.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
-@Data
+@Getter
+@RequiredArgsConstructor
+@ToString
 public class VacationInfo {
 
     private int id;
-    private int vacationNum;
+    private double vacationNum;
     private String addTime;
     private String endTime;
     private int employeeId;
