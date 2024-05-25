@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="92e11846-9b7d-447f-8c2c-e5cdebe36890" name="Changes" comment="" />
+    <list default="true" id="d0c2cd75-9a71-4926-86b9-67ce0b6b0ff7" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/BaekEnd/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/BaekEnd/.idea/misc.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$/grid">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -16,7 +38,7 @@
   <component name="ProjectColorInfo"><![CDATA[{
   "associatedIndex": 8
 }]]></component>
-  <component name="ProjectId" id="2g7sO0kfiZdnyGgNHergz0CLymi" />
+  <component name="ProjectId" id="2g0fqtf7sUIJdFJXOG4sHTBFRmW" />
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
@@ -24,22 +46,37 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "android.gradle.sync.needed": "true",
     "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Playdata/Documents/Grid_HR-ERP/BaekEnd",
+    "last_opened_file_path": "/Users/baekdonghyeon/Grid_HR-ERP",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="GridApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="grid.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="org.highfives.grid.GridApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="92e11846-9b7d-447f-8c2c-e5cdebe36890" name="Changes" comment="" />
-      <created>1715059914919</created>
+      <changelist id="d0c2cd75-9a71-4926-86b9-67ce0b6b0ff7" name="Changes" comment="" />
+      <created>1714839610992</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1715059914919</updated>
-      <workItem from="1715059916035" duration="43000" />
+      <updated>1714839610992</updated>
+      <workItem from="1714839612027" duration="2848000" />
     </task>
     <servers />
   </component>

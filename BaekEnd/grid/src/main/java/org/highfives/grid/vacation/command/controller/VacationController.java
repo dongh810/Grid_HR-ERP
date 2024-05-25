@@ -39,10 +39,10 @@ public class VacationController {
 
     @GetMapping("/test")
     public void test() {
-//        vacationService.giveAnnualVacationAfterYear();
-//        vacationService.giveAnnualVacation();
+        vacationService.giveAnnualVacationAfterYear();
+        vacationService.giveAnnualVacationBeforeYear();
 //        vacationService.giveRegularVacation();
-        vacationService.giveHealthVacation();
+//        vacationService.giveHealthVacation();
     }
 
     @PostMapping("/type")
