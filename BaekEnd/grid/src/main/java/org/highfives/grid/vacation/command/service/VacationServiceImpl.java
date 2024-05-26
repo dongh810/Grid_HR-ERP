@@ -2,8 +2,9 @@ package org.highfives.grid.vacation.command.service;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.highfives.grid.user.entity.Employee;
-import org.highfives.grid.user.service.UserService;
+import org.highfives.grid.user.command.aggregate.Gender;
+import org.highfives.grid.user.query.dto.UserDTO;
+import org.highfives.grid.user.query.service.UserService;
 import org.highfives.grid.vacation.command.entity.VacationHistory;
 import org.highfives.grid.vacation.command.entity.VacationInfo;
 import org.highfives.grid.vacation.command.entity.VacationPolicy;
@@ -12,10 +13,7 @@ import org.highfives.grid.vacation.command.repository.VacationHistoryRepository;
 import org.highfives.grid.vacation.command.repository.VacationInfoRepository;
 import org.highfives.grid.vacation.command.repository.VacationPolicyRepository;
 import org.highfives.grid.vacation.command.repository.VacationTypeRepository;
-import org.highfives.grid.vacation.command.vo.GiveVacation;
-import org.highfives.grid.vacation.command.vo.ModifyPolicy;
-import org.highfives.grid.vacation.command.vo.RegistPolicy;
-import org.highfives.grid.vacation.command.vo.RegistVacationType;
+import org.highfives.grid.vacation.command.vo.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +23,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
-import java.util.Optional;
 
 @Service(value = "VacationCommandService")
 @Slf4j
@@ -79,7 +76,7 @@ public class VacationServiceImpl implements VacationService {
         String firstDayString = firstDayOfMonth.toString();
         LocalDate lastDayOfMonth = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
         String lastDayString = lastDayOfMonth.toString();
-        List<Employee> employees = userService.getAllUserinfo();
+        List<UserDTO> employees = userService.findAllUsers();
 
         // 1년은 안되고, 1달은 지난 직원이 사용안한 월차가 있으면 삭제하고 그 기록을 vacation_history에 저장
         for (int i = 1; i < employees.size(); i++) {
@@ -88,9 +85,9 @@ public class VacationServiceImpl implements VacationService {
             int months = countMonths(userId);
 
             if (day < 365 && months >= 1) {
-                if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 4) != null) {
-                    if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 4).getVacationNum() != 0) {
-                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(4, userId);
+                if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 2) != null) {
+                    if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 2).getVacationNum() != 0) {
+                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(2, userId);
                         VacationHistory inputVacationHistory = VacationHistory.builder()
                                 .changeTime(firstDayString)
                                 .changeReason("사용기한 만료로 인한 월차 소멸")
@@ -101,7 +98,7 @@ public class VacationServiceImpl implements VacationService {
 
                         vacationHistoryRepository.save(inputVacationHistory);
                     } else {
-                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(4, userId);
+                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(2, userId);
                     }
                 }
             }
@@ -145,7 +142,7 @@ public class VacationServiceImpl implements VacationService {
         String firstDayString = firstDayOfYear.toString();
         LocalDate lastDayOfYear = LocalDate.now().withDayOfYear(LocalDate.now().lengthOfYear());
         String lastDayString = lastDayOfYear.toString();
-        List<Employee> employees = userService.getAllUserinfo();
+        List<UserDTO> employees = userService.findAllUsers();
 
         // 입사 후 1년이 지난 직원들이 사용안한 연차가 있다면 삭제하고 그 기록을 vacation_history에 저장
         for (int i = 1; i < employees.size(); i++) {
@@ -235,16 +232,16 @@ public class VacationServiceImpl implements VacationService {
         String firstDayString = firstDayOfYear.toString();
         LocalDate lastDayOfYear = LocalDate.now().withDayOfYear(LocalDate.now().lengthOfYear());
         String lastDayString = lastDayOfYear.toString();
-        List<Employee> employees = userService.getAllUserinfo();
+        List<UserDTO> employees = userService.findAllUsers();
 
         // 휴가를 새로 insert 하기 전, 기존의 휴가가 남아있다면 삭제하고, 그 기록을 vacation_history에 저장
         for (int i = 1; i < employees.size(); i++) {
             int userId = employees.get(i).getId();
 
             try {
-                if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 3) != null) {
-                    if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 3).getVacationNum() != 0) {
-                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(3, userId);
+                if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 4) != null) {
+                    if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 4).getVacationNum() != 0) {
+                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(4, userId);
                         VacationHistory inputVacationHistory = VacationHistory.builder()
                                 .changeTime(firstDayString)
                                 .changeReason("사용기한 만료로 인한 정기휴가 소멸")
@@ -255,7 +252,7 @@ public class VacationServiceImpl implements VacationService {
 
                         vacationHistoryRepository.save(inputVacationHistory);
                     } else {
-                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(3, userId);
+                        vacationInfoRepository.deleteByTypeIdAndEmployeeId(4, userId);
                     }
                 }
             } catch (NullPointerException e) {
@@ -299,16 +296,21 @@ public class VacationServiceImpl implements VacationService {
         String firstDayString = firstDayOfMonth.toString();
         LocalDate lastDayOfMonth = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
         String lastDayString = lastDayOfMonth.toString();
-        List<Employee> employees = userService.getAllUserinfo();
+        List<UserDTO> employees = userService.findAllUsers();
 
         // 기존의 보건휴가가 남아있으면 지우고, 그 이력을 vacation_history에 저장
         for (int i = 1; i < employees.size(); i++) {
-            if (employees.get(i).getGender().equals("F")) {
+            System.out.println("!!!!!!");
+            System.out.println(employees.get(i).getGender() == Gender.F);
+            System.out.println(employees.get(i));
+            System.out.println("!!!!!!");
+            if (employees.get(i).getGender() == Gender.F) {
                 int userId = employees.get(i).getId();
+                System.out.println(userId);
                 try {
-                    if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 2) != null) {
-                        if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 2).getVacationNum() != 0) {
-                            vacationInfoRepository.deleteByTypeIdAndEmployeeId(2, userId);
+                    if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 3) != null) {
+                        if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 3).getVacationNum() != 0) {
+                            vacationInfoRepository.deleteByTypeIdAndEmployeeId(3, userId);
 
                             VacationHistory inputVacationHistory = VacationHistory.builder()
                                     .changeTime(firstDayString)
@@ -332,7 +334,7 @@ public class VacationServiceImpl implements VacationService {
 
         // 보건휴가를 새로 insert 하고, 그 이력을 vacation_history에 저장
         for (int i = 1; i < employees.size(); i++) {
-            if (employees.get(i).getGender().equals("F")) {
+            if (employees.get(i).getGender() == Gender.F) {
                 int userId = employees.get(i).getId();
 
                 VacationInfo inputVacationInfo = VacationInfo.builder()
@@ -379,8 +381,26 @@ public class VacationServiceImpl implements VacationService {
     public void registVacationType(RegistVacationType typeInfo) {
         VacationType vacationType = VacationType.builder()
                 .typeName(typeInfo.getTypeName())
+                .vacationNum(typeInfo.getVacationNum())
+                .dateOfUse(typeInfo.getDateOfUse())
+                .vacationExplain(typeInfo.getVacationExplain())
                 .build();
         vacationTypeRepository.save(vacationType);
+    }
+
+    @Override
+    @Transactional
+    public void modifyVacationType(ModifyVacationType typeInfo, int id) {
+        VacationType vacationType = vacationTypeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        vacationType.setVacationNum(typeInfo.getVacationNum());
+        vacationType.setDateOfUse(typeInfo.getDateOfUse());
+        vacationType.setVacationExplain(typeInfo.getVacationExplain());
+    }
+
+    @Override
+    @Transactional
+    public void deleteVacationType(int id) {
+        vacationTypeRepository.deleteById(id);
     }
 
     @Override
@@ -446,7 +466,7 @@ public class VacationServiceImpl implements VacationService {
 
     // 입사이후 총 몇일이 지났는지 계산하는 메서드
     private int countDays(int userId) {
-        Employee employees = userService.getUserInfo(userId).orElseThrow(IllegalArgumentException::new);
+        UserDTO employees = userService.findUserById(userId);
         LocalDateTime today = LocalDateTime.now();
 
         String day = employees.getJoinTime();
@@ -462,10 +482,10 @@ public class VacationServiceImpl implements VacationService {
 
     // 입사이후 총 몇달이 지났는지 계산하는 메서드
     private int countMonths(int userId) {
-        Employee employee = userService.getUserInfo(userId).orElseThrow(IllegalArgumentException::new);
+        UserDTO employees = userService.findUserById(userId);
         LocalDate today = LocalDate.now();
 
-        String day = employee.getJoinTime();
+        String day = employees.getJoinTime();
         LocalDate joinDate = LocalDate.parse(day);
 
         Period period = Period.between(joinDate, today);

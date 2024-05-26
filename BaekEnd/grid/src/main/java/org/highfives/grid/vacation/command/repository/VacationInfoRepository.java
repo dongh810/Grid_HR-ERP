@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface VacationInfoRepository extends JpaRepository<VacationInfo, Integer> {
-    Optional<VacationInfo> findByEmployeeId(Long employeeId);
+    VacationInfo findByEmployeeId(int employeeId);
 
     void deleteByTypeIdAndEmployeeId(int typeId, int employeeId);
 
