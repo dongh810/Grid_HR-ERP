@@ -1,10 +1,13 @@
 package org.highfives.grid.user.query.repository;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.highfives.grid.user.query.dto.DutiesDTO;
 import org.highfives.grid.user.query.dto.LeaderInfoDTO;
+import org.highfives.grid.user.query.dto.PositionDTO;
 import org.highfives.grid.user.query.dto.UserDTO;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface UserMapper {
@@ -19,11 +22,15 @@ public interface UserMapper {
 
     List<UserDTO> getUserList();
 
-    UserDTO getUserInfoById(int id);
+    List<UserDTO> getUserListByName(String name);
 
-    UserDTO getUserInfo(int eNum);
+    UserDTO getUserInfo(Map<String, Object> info);
 
-    String getPosition(int id);
+    Map<String, Object> getUserInfoByEmail(String email);
 
-    String getDuties(int id);
+    List<PositionDTO> findPositions();
+
+    List<UserDTO> findTeamList(int teamId);
+
+    List<DutiesDTO> findDuties();
 }

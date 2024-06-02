@@ -19,4 +19,5 @@ public class ResVacationPolicyVO {
     private String href;
     private VacationPolicyWithTypeName result;
 
+
 }

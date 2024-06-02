@@ -17,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.highfives.grid.user.command.aggregate.Gender.M;
@@ -68,7 +70,7 @@ class UserServiceImplTests {
     void addNewUserTest(UserDTO givenInfo) {
 
         Assertions.assertDoesNotThrow(
-                () -> userService.addNewUser(givenInfo)
+                () -> userService.addNewUser(givenInfo, null)
         );
     }
 
@@ -133,6 +135,19 @@ class UserServiceImplTests {
 
         Assertions.assertEquals(userService.changeGender(1),false);
         Assertions.assertEquals(userService.changeGender(4),true);
+    }
+
+    @DisplayName("비밀번호 리셋")
+    @Test
+    @Transactional
+    void resetPwdTest() {
+        Map<String, String> test = new HashMap<>();
+        test.put("email", "gridpeople2024@gmail.com");
+        test.put("pwd", "qwer1234!");
+
+        Assertions.assertDoesNotThrow(
+                () -> userService.resetPwd(test)
+        );
     }
 
 }

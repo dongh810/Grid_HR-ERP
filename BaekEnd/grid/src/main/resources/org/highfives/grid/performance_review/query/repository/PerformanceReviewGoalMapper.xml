@@ -92,7 +92,7 @@
         JOIN (SELECT * FROM employee WHERE duties_id = 3) as approver
         ON A.approver_id = approver.id
         WHERE A.approver_id = #{employeeId}
-          AND A.approval_status = 'S'
+          AND A.approval_status IN ('S', 'A', 'D')
     </select>
 
     <!--  평가 목표 상세 조회  -->
@@ -130,6 +130,7 @@
         WHERE goal_id = #{goal_id};
     </select>
 
+<!--    평가 년도 조회-->
     <select id="selectGoalByWriterIdAndYear" resultMap="goalResultMap" parameterType="hashmap">
         SELECT
         A.id as 'ID'
@@ -150,5 +151,4 @@
         WHERE A.writer_id = #{writerId}
         AND A.year = #{year};
     </select>
-
 </mapper>

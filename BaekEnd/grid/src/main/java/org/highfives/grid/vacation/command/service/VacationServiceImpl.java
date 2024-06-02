@@ -2,6 +2,7 @@ package org.highfives.grid.vacation.command.service;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+
 import org.highfives.grid.user.command.aggregate.Gender;
 import org.highfives.grid.user.query.dto.UserDTO;
 import org.highfives.grid.user.query.service.UserService;
@@ -99,6 +100,7 @@ public class VacationServiceImpl implements VacationService {
                         vacationHistoryRepository.save(inputVacationHistory);
                     } else {
                         vacationInfoRepository.deleteByTypeIdAndEmployeeId(2, userId);
+
                     }
                 }
             }
@@ -253,6 +255,7 @@ public class VacationServiceImpl implements VacationService {
                         vacationHistoryRepository.save(inputVacationHistory);
                     } else {
                         vacationInfoRepository.deleteByTypeIdAndEmployeeId(4, userId);
+
                     }
                 }
             } catch (NullPointerException e) {
@@ -300,10 +303,6 @@ public class VacationServiceImpl implements VacationService {
 
         // 기존의 보건휴가가 남아있으면 지우고, 그 이력을 vacation_history에 저장
         for (int i = 1; i < employees.size(); i++) {
-            System.out.println("!!!!!!");
-            System.out.println(employees.get(i).getGender() == Gender.F);
-            System.out.println(employees.get(i));
-            System.out.println("!!!!!!");
             if (employees.get(i).getGender() == Gender.F) {
                 int userId = employees.get(i).getId();
                 System.out.println(userId);
@@ -311,7 +310,6 @@ public class VacationServiceImpl implements VacationService {
                     if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 3) != null) {
                         if (vacationInfoRepository.findByEmployeeIdAndTypeId(userId, 3).getVacationNum() != 0) {
                             vacationInfoRepository.deleteByTypeIdAndEmployeeId(3, userId);
-
                             VacationHistory inputVacationHistory = VacationHistory.builder()
                                     .changeTime(firstDayString)
                                     .changeReason("사용기한 만료로 인한 보건휴가 소멸")
@@ -365,15 +363,29 @@ public class VacationServiceImpl implements VacationService {
     public void giveVacationByManager(GiveVacation vacationInfo) {
         LocalDate today = LocalDate.now();
         String day = today.toString();
+        String employeeNum = vacationInfo.getEmployeeNum();
+        int employeeId = userService.findUserByEmployeeNum(employeeNum).getId();
+
         VacationInfo inputVacationInfo = VacationInfo.builder()
                 .addTime(day)
                 .vacationNum(vacationInfo.getVacationNum())
                 .endTime(vacationInfo.getEndTime())
-                .employeeId(vacationInfo.getEmployeeId())
+                .employeeId(employeeId)
                 .typeId(vacationInfo.getTypeId())
                 .build();
 
         vacationInfoRepository.save(inputVacationInfo);
+
+        VacationHistory inputVacationHistory = VacationHistory.builder()
+                .changeTime(day)
+                .changeReason("관리자에 의한 직접 지급")
+                .typeId(vacationInfo.getTypeId())
+                .changeTypeId(1)
+                .employeeId(employeeId)
+                .build();
+
+
+        vacationHistoryRepository.save(inputVacationHistory);
     }
 
     @Override
@@ -384,6 +396,7 @@ public class VacationServiceImpl implements VacationService {
                 .vacationNum(typeInfo.getVacationNum())
                 .dateOfUse(typeInfo.getDateOfUse())
                 .vacationExplain(typeInfo.getVacationExplain())
+                .useYn("Y")
                 .build();
         vacationTypeRepository.save(vacationType);
     }
@@ -395,6 +408,7 @@ public class VacationServiceImpl implements VacationService {
         vacationType.setVacationNum(typeInfo.getVacationNum());
         vacationType.setDateOfUse(typeInfo.getDateOfUse());
         vacationType.setVacationExplain(typeInfo.getVacationExplain());
+        vacationType.setUseYn(typeInfo.getUseYn());
     }
 
     @Override

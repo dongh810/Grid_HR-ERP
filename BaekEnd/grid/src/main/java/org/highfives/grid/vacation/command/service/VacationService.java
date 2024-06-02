@@ -2,6 +2,7 @@ package org.highfives.grid.vacation.command.service;
 
 import org.highfives.grid.vacation.command.vo.*;
 
+
 public interface VacationService {
     void modifyVacationPolicy(ModifyPolicy policyInfo, int id);
 
@@ -28,4 +29,5 @@ public interface VacationService {
     void modifyVacationType(ModifyVacationType typeInfo, int id);
 
     void deleteVacationType(int id);
+
 }

@@ -1,5 +1,6 @@
 package org.highfives.grid.vacation.query.service;
 
+
 import org.highfives.grid.vacation.query.vo.*;
 
 
@@ -23,4 +24,12 @@ public interface VacationService {
     ResVacationTypeVO getVacationType();
 
     ResOneVacationTypeVO getVacationTypeById(int id);
+
+    ResVacationHistoryVO searchVacationHistoryByName(String employeeName);
+
+    ResVacationHistoryVO searchVacationHistoryById(String employeeNumber);
+
+    ResVacationHistoryVO getUserVacationHistory(int employeeId);
+
+    ResVacationTypeVO getAllVacationType();
 }
