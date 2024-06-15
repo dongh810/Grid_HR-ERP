@@ -51,7 +51,6 @@
 <img src="https://img.shields.io/badge/WBS-CD9834.svg?style=flat-square&logo=GitHub&logoColor=white"/>
 </a>
 
-
 ## 2-2. 요구사항 명세서
 <a href="https://github.com/beyond-sw-camp/be04-fin-5team-GRID/wiki/%EC%9A%94%EA%B5%AC-%EC%82%AC%ED%95%AD-%EB%AA%85%EC%84%B8%EC%84%9C" target="_blank">
 <img src="https://img.shields.io/badge/요구 사항 명세서-5B4638.svg?style=flat-square&logo=GitHub&logoColor=white"/>
