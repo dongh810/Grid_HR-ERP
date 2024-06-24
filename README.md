@@ -95,8 +95,6 @@
 </a>
 
 <br>
-
-# 3. 고도화 계획
 <a href="https://github.com/beyond-sw-camp/be04-fin-5team-GRID/wiki/%EA%B3%A0%EB%8F%84%ED%99%94" target="_blank">
 <img src="https://img.shields.io/badge/고도화-003545.svg?style=flat-square&logo=GitHub&logoColor=white"/>
 </a>
