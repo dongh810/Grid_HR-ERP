@@ -2,7 +2,7 @@
 
 ![Group 70 (2)](https://github.com/beyond-sw-camp/be04-fin-5team-GRID/assets/105986200/ae76d635-a0ec-4230-8bc9-bb3d609a35ae)
 
-### 팀명: HighFives(Team HighFives)
+### 팀명: HighFives
 
 ### 팀원
 
